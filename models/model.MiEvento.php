@@ -9,12 +9,14 @@ class mMiEvento {
     	$this->dbh = Conexion::singleton_conexion();
     }
 
-    public function get_categorias(){
+    public function get_categorias($cat_count = ''){
     	try {
 
-            $sql = "SELECT * from me_categorias";
 
-            $query = $this->dbh->prepare($sql);
+            $sql = "SELECT * from me_categorias";
+            $sql2 = "SELECT id_categoria AS cat_id, cat_nombre,  (SELECT COUNT(*) FROM me_eventos WHERE id_categoria = cat_id ) AS count FROM me_categorias";
+            $query_p = ($cat_count == true) ? $sql2 : $sql;
+            $query = $this->dbh->prepare($query_p);
             $query->execute();
 
             if($query->rowCount() >= 1):
@@ -79,7 +81,7 @@ class mMiEvento {
     /**
      * ACTUALIZA LA INFORMACION DEL EVENTO
      */
-    public function set_update_evento($nombre, $slug, $descrip, $categoria,$usuario, $event_id){
+    public function set_update_evento($nombre, $slug, $descrip, $categoria,$usuario, $event_id, $estatus){
         if (isset($event_id) AND $event_id != '') :
 
             try {
@@ -88,7 +90,8 @@ class mMiEvento {
                                                 eve_slug = :slug,
                                                 eve_descripcion = :descripcion,
                                                 id_categoria = :categoria,
-                                                id_usuario = :usuario
+                                                id_usuario = :usuario,
+                                                estatus = :estatus
                                                 WHERE id_evento = :ideve');
 
                 $query->bindParam(':nombre', $nombre, PDO::PARAM_STR);
@@ -97,6 +100,7 @@ class mMiEvento {
                 // use PARAM_STR although a number
                 $query->bindParam(':categoria', $categoria, PDO::PARAM_INT);
                 $query->bindParam(':usuario', $usuario, PDO::PARAM_INT);
+                $query->bindParam(':estatus', $estatus, PDO::PARAM_INT);
                 $query->bindParam(':ideve', $event_id, PDO::PARAM_INT);
                 $op = $query->execute();
 
@@ -132,18 +136,18 @@ class mMiEvento {
     }
 
 
-    public function get_mEventos($event_id){
+    public function get_mEventos($event_id, $limit = ''){
         $query_ex = 'ORDER BY id_evento ASC';
         if ($event_id != false) $query_ex = "WHERE id_evento = ".$event_id;
 
         try {
 
-            $sql = "SELECT id_evento, eve_nombre, eve_slug, eve_descripcion, eve.id_usuario, usu_nombre, eve.id_categoria, cat_nombre, (SELECT `title` FROM me_uploads WHERE id_evento = eve.id_evento LIMIT 1) AS freatured FROM me_eventos AS eve
+            $sql = "SELECT id_evento, eve_nombre, eve_slug, eve_descripcion, estatus, eve.id_usuario, usu_nombre, eve.id_categoria, cat_nombre, (SELECT `title` FROM me_uploads WHERE id_evento = eve.id_evento LIMIT 1) AS freatured FROM me_eventos AS eve
                 LEFT OUTER JOIN me_categorias AS ca
                 ON eve.id_categoria = ca.id_categoria
                 LEFT OUTER JOIN me_usuarios AS usu
                 ON eve.id_usuario = usu.id_usuario
-                 ".$query_ex;
+                 ".$query_ex.' '.$limit;
 
             $query = $this->dbh->prepare($sql);
             $query->execute();
@@ -202,6 +206,43 @@ class mMiEvento {
 
             }
         endif;
+    }
+
+
+    ///// CATEGORIAS ////////////////////////////////
+
+
+    public function set_save_categoria($cat_name, $cat_slug = ''){
+        if (isset($cat_name) AND $cat_name != '') :
+             try {
+                $query = $this->dbh->prepare('INSERT INTO me_categorias (cat_nombre, cat_slug) VALUES (:cat_nombre,:cat_slug)');
+
+                $query->bindParam(":cat_nombre", $cat_name, PDO::PARAM_STR);
+                $query->bindParam(":cat_slug", $cat_slug, PDO::PARAM_STR);
+                $op = $query->execute();
+
+                return $op;
+
+            }catch(PDOException $e){
+                print "Error!: " . $e->getMessage();
+
+            }
+        endif;
+    }
+
+    public function get_delete_categoria($cat_id){
+         try {
+            $sql = "DELETE FROM me_categorias WHERE id_categoria = :id_cat";
+            $stmt = $this->dbh->prepare($sql);
+            $stmt->bindParam(':id_cat', $cat_id, PDO::PARAM_INT);
+            $po = $stmt->execute();
+
+            return $po;
+
+            }catch(PDOException $e){
+                print "Error!: " . $e->getMessage();
+
+            }
     }
 
 }

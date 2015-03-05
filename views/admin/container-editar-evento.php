@@ -15,6 +15,7 @@ if (isset($_GET['d']) and $post != false):?>
 			<input type="text" name="event_name" id="event_name" value="<?php echo $post->eve_nombre; ?>">
 			<label>Descripción</label>
 			<input type="text" name="event_descripcion" id="event_descripcion" value="<?php echo $post->eve_descripcion; ?>">
+			<label>Categoria</label>
 			<div class="select-options sel-1">
 				<span class="caja-select caja-select_cat"><?php echo $post->cat_nombre; ?></span>
 				<ul class="list-options">
@@ -27,7 +28,8 @@ if (isset($_GET['d']) and $post != false):?>
 					endif; ?>
 				</ul>
 			</div>
-			<div class="select-options">
+			<label>Usuario del Evento</label>
+			<div class="select-options sel-2">
 				<span class="caja-select caja-select_usu"><?php echo $post->usu_nombre; ?></span>
 				<ul class="list-options">
 					<?php if (isset($info_vew['usuarios'])):
@@ -39,6 +41,17 @@ if (isset($_GET['d']) and $post != false):?>
 					endif; ?>
 				</ul>
 			</div>
+			<label>Estatus</label>
+			<div class="select-options">
+				<?php $name_status = ($post->estatus == 1) ? 'Publicado' : 'Bloqueado'; ?>
+				<span class="caja-select caja-select_est"><?php echo $name_status; ?></span>
+				<ul class="list-options">
+					<li class="c-option " data-id_sel="1"  data-tipo="est">Publicado</li>
+					<li class="c-option s-gris" data-id_sel="0"  data-tipo="est">Bloqueado</li>
+				</ul>
+			</div>
+			<input type="hidden" name="event_estatus" id="event_estatus" value="<?php echo $post->estatus; ?>" class="eve_est">
+
 			<input type="hidden" name="event_categoria" id="event_categoria" value="<?php echo $post->id_categoria; ?>" class="eve_cat">
 			<input type="hidden" name="event_usuario" id="event_usuario" value="<?php echo $post->id_usuario; ?>" class="eve_usu">
 			<input type="hidden" name="action" id="action" value="setEditEvent">
@@ -46,7 +59,7 @@ if (isset($_GET['d']) and $post != false):?>
 			<input type="hidden" name="base_url" id="base_url" value="<?php echo base_url(); ?>">
 			<input type="file" name="subir-fotos-evento" id="subir-fotos-evento"  multiple accept="image/*">
 
-			<input type="submit" value="Crear Evento">
+			<input type="submit" value="Editar Evento">
 		</form>
 	</div>
 

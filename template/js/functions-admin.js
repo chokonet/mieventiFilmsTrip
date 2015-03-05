@@ -40,13 +40,6 @@
 			};
 		});
 
-		/**
-		 * ELIMINAR EVENTO
-		 */
-		$('.eliminar-evento').on('click', function () {
-			var id_ev = $(this).data('id_event');
-			console.log(this);
-		});
 
 		/*
 

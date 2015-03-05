@@ -108,7 +108,8 @@ function check_url_no_home(){
 
 function get_info_pats(){
 	$obj = new stdClass;
-	$obj->user_nick       = isset($_SESSION['user']->usu_nick) ? $_SESSION['user']->usu_nick : '';
+	$obj->user_id        = isset($_SESSION['user']->id_usuario) ? $_SESSION['user']->id_usuario : '';
+	$obj->user_nick      = isset($_SESSION['user']->usu_nick) ? $_SESSION['user']->usu_nick : '';
 	$obj->url_eventos    = base_url().'eventos/';
 	$obj->url_usuarios   = base_url().'usuarios/';
 	$obj->url_categorias = base_url().'categorias/';
@@ -118,11 +119,13 @@ function get_info_pats(){
 function get_nombre_vista($admin){
 	$eve_dos = isset($_GET['accionA']) ? $_GET['accionA'] : false;
 	$vew_name = ($admin == 'admin') ? 'admin': $admin ;
+	$vew_name = ($admin == 'usuarios') ? 'usuarios': $admin ;
 	$vew_name = ($admin == 'categorias') ? 'categorias': $admin ;
 	$vew_name = ($admin == 'eventos') ? 'eventos': $admin ;
 	if ($eve_dos != false) {
 		$vew_name = ($eve_dos == 'nuevo-evento') ? 'nuevo-evento': false ;
 		$vew_name = ($eve_dos == 'editar-evento') ? 'editar-evento': $vew_name ;
+		$vew_name = ($eve_dos == 'eliminar-categoria') ? '': $vew_name ;
 	}
 	return $vew_name;
 }
@@ -133,10 +136,13 @@ function get_class_name($admin){
 	$eve_dos = isset($_GET['accionA']) ? $_GET['accionA'] : false;
 	$class_name = ($admin == 'admin') ? 'Admin': $admin ;
 	$vew_name = ($admin == 'categorias') ? 'Categorias': $admin ;
+	$vew_name = ($admin == 'usuarios') ? 'Usuarios': $admin ;
 	$class_name = ($admin == 'eventos') ? 'Eventos': $class_name;
 	if ($eve_dos != false) {
 		$class_name = ($eve_dos == 'nuevo-evento') ? 'Eventos': false ;
 		$class_name = ($eve_dos == 'editar-evento') ? 'Eventos': $class_name ;
+		$class_name = ($eve_dos == 'eliminar-categoria') ? 'Categorias': $class_name ;
+
 	}
 	return $class_name;
 }

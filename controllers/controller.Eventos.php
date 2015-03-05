@@ -69,8 +69,9 @@ class Eventos {
         $categoria = isset($data['event_categoria']) ? $data['event_categoria'] : 1;
         $usuario   = isset($data['event_usuario']) ? $data['event_usuario'] : 1;
         $event_id  = isset($data['evento_id_edit']) ? $data['evento_id_edit'] : 1;
+        $estatus   = isset($data['event_estatus']) ? $data['event_estatus'] : 1;
 
-        $result = $this->_model->set_update_evento($nombre, $slug, $descrip, $categoria,$usuario, $event_id);
+        $result = $this->_model->set_update_evento($nombre, $slug, $descrip, $categoria,$usuario, $event_id, $estatus);
 
         if ($result == TRUE) :
             $url = base_url().'admin/eventos/editar-evento/'.$event_id.'/';
