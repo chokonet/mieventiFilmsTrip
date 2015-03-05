@@ -26,8 +26,8 @@ endif;
 function base_url(){
 	$carpeta =  basename(dirname(dirname(__FILE__)));
 	if ($_SERVER["HTTP_HOST"] == 'localhost') {
-		return $baseurl = "http://" . $_SERVER["HTTP_HOST"] ."/stdo/".$carpeta."/";
-	}elseif($_SERVER["HTTP_HOST"] == 'filmstrip.com' || $_SERVER["HTTP_HOST"] == 'www.filmstrip.com.com') {
+		return $baseurl = "http://" . $_SERVER["HTTP_HOST"] ."/".$carpeta."/";
+	}elseif($_SERVER["HTTP_HOST"] == 'filmstrip.com' || $_SERVER["HTTP_HOST"] == 'www.filmstrip.com') {
 		return $baseurl = "http://" . $_SERVER["HTTP_HOST"] ."/".$carpeta."/";
 	}else{
 		return $baseurl = "http://" . $_SERVER["HTTP_HOST"] ."/";
