@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(template|uploads|helpers)($|/) - [L]
+RewriteRule ^admin/([a-zA-Z]+)/?$ controllers/controller.php?seccionA=$1 [L,NC]
+RewriteRule ^admin/([a-zA-Z]+)/([a-zA-Z0-9-]+)/?$ controllers/controller.php?seccionA=$1&accionA=$2 [L,NC]
+RewriteRule ^admin/([a-zA-Z]+)/([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)/?$ controllers/controller.php?seccionA=$1&accionA=$2&d=$3 [L,NC]
+RewriteRule ^([a-zA-Z]+)/?$ controllers/controller.php?admin=$1 [L,NC]
+RewriteRule ^([a-zA-Z]+)/([a-zA-Z0-9-]+)/?$ controllers/controller.php?tipo=$1&n_evento=$2 [L,NC]
+RewriteRule ^([a-zA-Z]+)/([a-zA-Z0-9-]+)/([a-zA-Z0-9-]+)/?$ controllers/controller.php?admin=$1&accion=$2&slug=$3 [L,NC]
+
+RewriteRule ^ controllers/controller.php [L]
+
+
+</IfModule>
