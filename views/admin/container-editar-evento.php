@@ -1,9 +1,12 @@
+<?php $post = isset($info_vew['posts']) ? $info_vew['posts'][0] : false; ?>
 <div class="links-admin links-event">
 	<a href="<?php echo base_url(); ?>admin/eventos/nuevo-evento/" class="boton inf-admin">Crear nuevo Evento</a>
+	<?php if (isset($_GET['d']) and $post != false):?>
+		<a href="<?php echo base_url()."galeria/evento/".$post->eve_slug; ?>" class="boton inf-admin">Ver Evento</a>
+	<?php endif; ?>
 </div>
 
-<?php $post = isset($info_vew['posts']) ? $info_vew['posts'][0] : false;
-if (isset($_GET['d']) and $post != false):?>
+<?php if (isset($_GET['d']) and $post != false):?>
 	<div class="ultimos-eventos container-eventos clearfix">
 	<h3>Editar Evento : <?php echo $post->eve_nombre; ?></h3>
 	<div class="error-login active_error_form" style="display: none;">
@@ -64,10 +67,17 @@ if (isset($_GET['d']) and $post != false):?>
 	</div>
 
 	<div class="contenedor-carga-fotos shadow">
+		<input type="hidden" name="base_url" id="base_url" value="<?php echo base_url(); ?>" >
+		<img src="<?php echo base_url(); ?>template/image/loader.gif" class="loader-carga-img">
 		<div class="imgenes-evento clearfix" id="manso-event">
 			<?php if (!empty($info_vew['fotos'])):
-				foreach ($info_vew['fotos'] as $key => $foto):?>
-					<img class="item" src="<?php echo url_foto($foto->title, $foto->id_evento, 'resize'); ?>">
+				foreach ($info_vew['fotos'] as $key => $foto):
+					$catch = 'mi-foto-alex'.$foto->id_upload.'-delete'.$foto->id_evento; ?>
+					<div class="item img-<?php echo $foto->id_upload; ?>">
+						<span class="boton eliminar-img" data-catch="<?php echo md5($catch); ?>" data-id_img="<?php echo $foto->id_upload; ?>" data-name="<?php echo $foto->title; ?>">Eliminar</span>
+						<img src="<?php echo url_foto($foto->title, $foto->id_evento, 'resize'); ?>">
+					</div>
+
 				<?php endforeach;
 			endif; ?>
 		</div>

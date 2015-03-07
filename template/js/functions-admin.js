@@ -29,6 +29,31 @@
 			$('.list-options').fadeOut();
 		});
 
+		$('#cuser').on('submit', function (event) {
+			event.preventDefault();
+			var nombre = $('#usu_name').val();
+			var nick = $('#usu_nick').val();
+			var name = $('#usu_email').val();
+			var password = $('#usu_password').val();
+
+			if (nombre  == '' || nick  == '' || name  == '' || password  == '') {
+				if (nombre  == ''){
+					$('#usu_name').css({'background':'#FCE4E4'});
+				}else if(nick  == ''){
+					$('#usu_nick').css({'background':'#FCE4E4'});
+				}else if(name  == ''){
+					$('#usu_email').css({'background':'#FCE4E4'});
+				}else if(password  == ''){
+					$('#usu_password').css({'background':'#FCE4E4'});
+				}
+
+				$('.active_error_form').css({'display':'block'});
+			}else{
+				document.cevent.submit();
+			};
+		});
+
+
 		$('#cevent').on('submit', function (event) {
 			event.preventDefault();
 			var nombre = $('#event_name').val();
@@ -79,6 +104,8 @@
 			var man = window.msnry;
 			var $container 	= $('#'+man.element.id);
 
+			$('.loader-carga-img').fadeIn();
+
 			$.ajax({
 			 	type: "POST",
 			 	url: base_url+"helpers/ajax.php",
@@ -89,12 +116,14 @@
 			 		image_data : image
 			 	}
 			}).done(function(result) {
+				var obj = jQuery.parseJSON(result);
+
+				$('.loader-carga-img').fadeOut();
 				var elems = [];
 
 				var fragment = document.createDocumentFragment();
 
-
-				var img = '<img class="item" src="'+result+'-resize.jpg">';
+				var img = '<div class="item img-'+obj.id_img+'"><span class="boton eliminar-img" data-catch="'+obj.cath+'" data-id_img="'+obj.id_img+'" data-name="'+obj.name_i+'">Eliminar</span><img src="'+obj.url+'-resize.jpg"></div>';
 
 				$container.append(img);
 				imagesLoaded( $container, function( instance ) {
@@ -122,6 +151,61 @@
 			addPhotosEvento(files);
 
 		});
+
+
+		$(document).on('click', '.eliminar-img', function (event) {
+			event.preventDefault();
+			var cath = $(this).data('catch');
+			var id_img = $(this).data('id_img');
+			var name = $(this).data('name');
+			var id_evento = $('#evento_id_edit').val();
+			var base_url = $('#base_url').val();
+
+			var r = confirm("Esta seguro de eliminar la imagen");
+			if (r == true) {
+			    delete_image_event(cath, id_img, id_evento, base_url, name);
+			} else {
+
+			}
+
+		});
+
+		function delete_image_event(cath, id_img, id_evento, base_url, name){
+			$('.loader-carga-img').fadeIn();
+			$.ajax({
+			 	type: "POST",
+			 	url: base_url+"helpers/ajax.php",
+			 	data: {
+			 		action    :'delete_img_event',
+			 		cath      : cath,
+			 		id_img    : id_img,
+			 		id_evento : id_evento,
+			 		name_img  : name
+
+			 	}
+			}).done(function(result) {
+				$('.loader-carga-img').fadeOut();
+				if (result) {
+					$( ".img-"+id_img ).remove();
+				};
+
+
+				var elems = [];
+
+				var fragment = document.createDocumentFragment();
+
+
+				var img = '<div class="item"><img src="'+result+'-resize.jpg"></div>';
+				var man = window.msnry;
+				var $container 	= $('#'+man.element.id);
+
+				imagesLoaded( $container, function( instance ) {
+					man.reloadItems();
+					man.layout();
+
+				});
+			});
+		}
 
 		function palabras(){
 			var respuesta = new Array ("af", "ab", "ac", "ad", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an");

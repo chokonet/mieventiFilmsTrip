@@ -21,6 +21,7 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true):
 
 endif;
 
+
 /**
  * URL SITIO
  */
@@ -170,14 +171,25 @@ function save_image_attachment( $imagen_data, $imagen_name, $event_id ){
 	$upload      = imagejpeg( $imagen, $path, 100 );
 	$url_imagen  = base_url()."/uploads/evento-".$event_id."/".$imagen_name.".jpg";
 
-	if ($upload){
+	if ($upload):
 		cortar_imagen_jpg($url_imagen, $imagen_name, $event_id);
 	 	resize_imagen_jpg( $url_imagen, $imagen_name, $event_id );
-	}
+	endif;
 
-	set_SaveDataImage($event_id, $imagen_name);
+	$id_img = set_SaveDataImage($event_id, $imagen_name);
+	if ($id_img != false AND $upload) :
+		$cifrado = 'mi-foto-alex'.$id_img.'-delete'.$event_id;
+		$arreglo = array(
+				'url'    => base_url()."/uploads/evento-".$event_id."/".$imagen_name,
+				'id_img' => $id_img,
+				'cath'   => md5($cifrado),
+				'name_i' => $imagen_name
 
-	if ($upload) return base_url()."/uploads/evento-".$event_id."/".$imagen_name;
+			);
+
+		 return $arreglo;
+
+	endif;
 
 	return false;
 
@@ -353,6 +365,7 @@ function seems_utf8($str) {
 	}
 	return true;
 }
+
 
 function remove_accents($string) {
 	if ( !preg_match('/[\x80-\xff]/', $string) )

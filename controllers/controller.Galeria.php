@@ -19,7 +19,12 @@ class Galeria {
 
     	$array = array();
         if (isset($_GET['accion']) AND $_GET['accion'] == 'evento' AND isset($_GET['slug'])):
-            $array['post'] = $this->_model->get_mEvento_slug($_GET['slug']);
+            if($this->_permisos == 2):
+                $array['post'] = $this->_model->get_mEvento_slug($_GET['slug'], $this->_user_id);
+            elseif ($this->_permisos == 1):
+
+                $array['post'] = $this->_model->get_mEvento_slug($_GET['slug']);
+            endif;
 
             if (isset($array['post']->id_evento)) :
                 $array['fotos'] = $this->_model->get_fotos_evento($array['post']->id_evento);

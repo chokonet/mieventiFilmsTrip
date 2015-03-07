@@ -4,17 +4,21 @@
 </div>
 <div class="ultimos-eventos container-eventos clearfix">
 	<h3>Usuarios</h3>
-	<div class="caja-crear-categoria clearfix shadow">
+	<div class="error-login active_error_form" style="display: none;">
+		<b>ERROR:</b> Favor de llenar todos los campos.
+	</div>
+	<div class="caja-crear-categoria clearfix shadow crea-usu-caja">
 		<h4>Crear Usuario</h4>
-		<form action="<?php echo base_url().'admin/usuarios'; ?>" method="post" name="ccatego" id="ccatego">
+
+		<form action="<?php echo base_url().'admin/usuarios'; ?>" method="post" name="cuser" id="cuser">
 			<label>Nombre del usuario</label>
 			<input type="text" name="usu_name" id="usu_name">
-			<label>Nick</label>
-			<input type="text" name="usu_nick" id="usu_nick">
+			<label class="segundos">Nick</label>
+			<input type="text" name="usu_nick" id="usu_nick" class="segundos">
 			<label>Email</label>
 			<input type="text" name="usu_email" id="usu_email">
-			<label>Contraseña</label>
-			<input type="text" name="usu_password" id="usu_password">
+			<label class="segundos">Contraseña</label>
+			<input type="text" name="usu_password" id="usu_password" class="segundos">
 			<input type="hidden" name="action" id="action" value="setSave">
 			<input type="submit" value="Crear usuario">
 		</form>

@@ -12,7 +12,6 @@ class mMiEvento {
     public function get_categorias($cat_count = ''){
     	try {
 
-
             $sql = "SELECT * from me_categorias";
             $sql2 = "SELECT id_categoria AS cat_id, cat_nombre, (SELECT COUNT(*) FROM me_eventos WHERE id_categoria = cat_id ) AS count FROM me_categorias";
             $query_p = ($cat_count == true) ? $sql2 : $sql;
@@ -139,7 +138,7 @@ class mMiEvento {
 
 
     public function get_mEventos($event_id, $limit = ''){
-        $query_ex = 'ORDER BY id_evento ASC';
+        $query_ex = 'ORDER BY id_evento DESC';
         if ($event_id != false) $query_ex = "WHERE id_evento = ".$event_id;
 
         try {
@@ -211,6 +210,29 @@ class mMiEvento {
     }
 
 
+    public function ultimaImagenUploads(){
+        try {
+
+            $sql = "SELECT * FROM me_uploads ORDER BY id_upload DESC LIMIT 1";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            if($query->rowCount() >= 1):
+                $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+                return $result[0]->id_upload;
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
+
+
     ///// CATEGORIAS ////////////////////////////////
 
 
@@ -241,10 +263,10 @@ class mMiEvento {
 
             return $po;
 
-            }catch(PDOException $e){
-                print "Error!: " . $e->getMessage();
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
 
-            }
+        }
     }
 
     public function get_user_info($user_id){
@@ -302,7 +324,8 @@ class mMiEvento {
     }
 
 
-    public function get_mEvento_slug($slug){
+    public function get_mEvento_slug($slug, $user_id = false){
+        $q_ext = ($user_id != false) ? 'AND eve.id_usuario = '.$user_id.' ' : '';
         try {
 
             $sql = "SELECT id_evento, eve_nombre, eve_slug, eve_descripcion, estatus, eve.id_usuario, usu_nombre, eve.id_categoria, cat_nombre, (SELECT `title` FROM me_uploads WHERE id_evento = eve.id_evento LIMIT 1) AS freatured FROM me_eventos AS eve
@@ -310,7 +333,7 @@ class mMiEvento {
                 ON eve.id_categoria = ca.id_categoria
                 LEFT OUTER JOIN me_usuarios AS usu
                 ON eve.id_usuario = usu.id_usuario
-                WHERE eve_slug = '$slug' AND estatus = 1 LIMIT 1";
+                WHERE eve_slug = '$slug' $q_ext AND estatus = 1 LIMIT 1";
 
             $query = $this->dbh->prepare($sql);
             $query->execute();
@@ -348,4 +371,25 @@ class mMiEvento {
             print "Error!: " . $e->getMessage();
         }
     }
+
+
+   public function set_deleteImageUploads($id_imagen, $id_evento){
+
+        try {
+            $sql = "DELETE FROM me_uploads WHERE id_upload = :id_upload AND id_evento = :id_evento";
+            $stmt = $this->dbh->prepare($sql);
+            $stmt->bindParam(':id_upload', $id_imagen, PDO::PARAM_INT);
+            $stmt->bindParam(':id_evento', $id_evento, PDO::PARAM_INT);
+
+            $po = $stmt->execute();
+
+            return $po;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
+
+
 }
