@@ -57,11 +57,15 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true):
 		require(PATH_MIEVENTO.'/views/admin/container-'.$vew_name.'.php');
 	endif;
 
+	if (file_exists(PATH_MIEVENTO.'/views/container-'.$vew_name.'.php')):
+		require(PATH_MIEVENTO.'/views/container-'.$vew_name.'.php');
+	endif;
+
 	echo get_template_footer('admin');
 
 else:
 	check_url_no_home();
-	echo get_template_header();
+	echo get_template_login_header();
 	if (file_exists(PATH_MIEVENTO.'/views/form-login.php')):
 		require(PATH_MIEVENTO.'/views/form-login.php');
 	endif;

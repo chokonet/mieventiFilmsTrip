@@ -14,7 +14,7 @@ class mMiEvento {
 
 
             $sql = "SELECT * from me_categorias";
-            $sql2 = "SELECT id_categoria AS cat_id, cat_nombre,  (SELECT COUNT(*) FROM me_eventos WHERE id_categoria = cat_id ) AS count FROM me_categorias";
+            $sql2 = "SELECT id_categoria AS cat_id, cat_nombre, (SELECT COUNT(*) FROM me_eventos WHERE id_categoria = cat_id ) AS count FROM me_categorias";
             $query_p = ($cat_count == true) ? $sql2 : $sql;
             $query = $this->dbh->prepare($query_p);
             $query->execute();
@@ -33,13 +33,15 @@ class mMiEvento {
     }
 
 
-    public function get_usuarios($tipo = 'all'){
+    public function get_usuarios($tipo = 'all', $usu_count = ''){
     	try {
     		$ext_q = ($tipo!= 'all') ? 'WHERE usu_permisos = ?' : '' ;
 
             $sql = "SELECT * from me_usuarios $ext_q";
+            $sql2 = "SELECT id_usuario AS usu_id, usu_nombre, usu_nick, usu_email, (SELECT COUNT(*) FROM me_eventos WHERE id_usuario = usu_id ) AS count, IF(usu_permisos = 1, 'administrador', 'cliente') AS tipo FROM me_usuarios";
 
-            $query = $this->dbh->prepare($sql);
+            $query_p = ($usu_count == true) ? $sql2 : $sql;
+            $query = $this->dbh->prepare($query_p);
             $query->bindParam(1,$tipo);
             $query->execute();
 
@@ -245,4 +247,105 @@ class mMiEvento {
             }
     }
 
+    public function get_user_info($user_id){
+         try {
+
+            $sql = "SELECT id_usuario, usu_nombre, usu_nick, usu_email, usu_permisos FROM me_usuarios WHERE id_usuario = $user_id";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            $dbh = null;
+            if($query->rowCount() >= 1):
+                $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+                return $result[0];
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
+
+
+    //// CLIENTE ///////
+
+
+    public function get_mEventos_user($user_id){
+        try {
+
+            $sql = "SELECT id_evento, eve_nombre, eve_slug, eve_descripcion, estatus, eve.id_usuario, usu_nombre, eve.id_categoria, cat_nombre, (SELECT `title` FROM me_uploads WHERE id_evento = eve.id_evento LIMIT 1) AS freatured FROM me_eventos AS eve
+                LEFT OUTER JOIN me_categorias AS ca
+                ON eve.id_categoria = ca.id_categoria
+                LEFT OUTER JOIN me_usuarios AS usu
+                ON eve.id_usuario = usu.id_usuario
+                WHERE usu.id_usuario = $user_id AND estatus = 1";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            if($query->rowCount() >= 1):
+                 $result  = $query->fetchAll(PDO::FETCH_OBJ);
+
+                 return $result;
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
+
+
+    public function get_mEvento_slug($slug){
+        try {
+
+            $sql = "SELECT id_evento, eve_nombre, eve_slug, eve_descripcion, estatus, eve.id_usuario, usu_nombre, eve.id_categoria, cat_nombre, (SELECT `title` FROM me_uploads WHERE id_evento = eve.id_evento LIMIT 1) AS freatured FROM me_eventos AS eve
+                LEFT OUTER JOIN me_categorias AS ca
+                ON eve.id_categoria = ca.id_categoria
+                LEFT OUTER JOIN me_usuarios AS usu
+                ON eve.id_usuario = usu.id_usuario
+                WHERE eve_slug = '$slug' AND estatus = 1 LIMIT 1";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            if($query->rowCount() >= 1):
+                 $result  = $query->fetchAll(PDO::FETCH_OBJ);
+
+                 return $result[0];
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+        }
+    }
+
+    public function get_fotos_evento($id_evento){
+        try {
+            $sql = "SELECT id_evento, title FROM me_uploads WHERE id_evento = $id_evento";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            $dbh = null;
+            if($query->rowCount() >= 1):
+                 $result  = $query->fetchAll(PDO::FETCH_OBJ);
+
+                 return $result;
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+        }
+    }
 }

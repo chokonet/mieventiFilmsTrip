@@ -8,8 +8,10 @@ class Usuarios {
     }
 
     public function getHtml_Template(){
+      $array=array();
+      $array['usuarios'] = $this->_model->get_usuarios('all', true);
 
-    	return 'as';
+    	return $array;
     }
 
   //   public function set_save($data){

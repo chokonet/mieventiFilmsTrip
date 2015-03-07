@@ -16,9 +16,10 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true):
 
 	// check_user_permisos();
 	check_user_permisos_admin($_GET);
+
+	if ( isset($_GET['admin']) AND $_GET['admin'] == 'logout') Login::logout_session();
+
 endif;
-
-
 
 /**
  * URL SITIO
@@ -83,7 +84,7 @@ function encript_password($password){
  */
 function check_user_permisos_admin(){
 	$is_ad = isset($_GET['admin']) ? $_GET['admin'] : '';
-	if ($is_ad != 'galeria' AND $_SESSION['user']->usu_permisos != 1):
+	if ($is_ad != 'galeria' AND $is_ad != 'logout' AND $_SESSION['user']->usu_permisos != 1):
 		$url = base_url().'galeria';
 		header("Location:".$url);
 		exit();
@@ -117,15 +118,24 @@ function get_info_pats(){
 }
 
 function get_nombre_vista($admin){
+
 	$eve_dos = isset($_GET['accionA']) ? $_GET['accionA'] : false;
+	$eve_dos_o = isset($_GET['accion']) ? $_GET['accion'] : false;
+
 	$vew_name = ($admin == 'admin') ? 'admin': $admin ;
 	$vew_name = ($admin == 'usuarios') ? 'usuarios': $admin ;
 	$vew_name = ($admin == 'categorias') ? 'categorias': $admin ;
 	$vew_name = ($admin == 'eventos') ? 'eventos': $admin ;
+	$vew_name = ($admin == 'galeria') ? 'galeria': $admin ;
+
 	if ($eve_dos != false) {
 		$vew_name = ($eve_dos == 'nuevo-evento') ? 'nuevo-evento': false ;
 		$vew_name = ($eve_dos == 'editar-evento') ? 'editar-evento': $vew_name ;
 		$vew_name = ($eve_dos == 'eliminar-categoria') ? '': $vew_name ;
+	}
+
+	if ($eve_dos_o != false) {
+		$vew_name = ($eve_dos_o == 'evento') ? 'evento-cliente': false ;
 	}
 	return $vew_name;
 }
@@ -138,6 +148,8 @@ function get_class_name($admin){
 	$vew_name = ($admin == 'categorias') ? 'Categorias': $admin ;
 	$vew_name = ($admin == 'usuarios') ? 'Usuarios': $admin ;
 	$class_name = ($admin == 'eventos') ? 'Eventos': $class_name;
+	$class_name = ($admin == 'galeria') ? 'Galeria': $class_name;
+
 	if ($eve_dos != false) {
 		$class_name = ($eve_dos == 'nuevo-evento') ? 'Eventos': false ;
 		$class_name = ($eve_dos == 'editar-evento') ? 'Eventos': $class_name ;

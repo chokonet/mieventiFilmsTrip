@@ -13,10 +13,19 @@
 	<link href='http://fonts.googleapis.com/css?family=Advent+Pro:500|Asap:400' rel='stylesheet' type='text/css'>
 	<script src="{site_url}template/js/jquery.js"></script>
 </head>
-<body>
+
+<body class="{class_b}">
+
 	<header class="header">
 		<div class="center-header">
 			<h1 class="logo">Filmstrip-club</h1>
+			<ul class="menu">
+				<li><a href="{site_url}logout/">Logout</a></li>
+				<li><a href="{site_url}galeria/">Galerias</a></li>
+			</ul>
 		</div>
 	</header>
+	<div class="user-info">
+		<span>Hola, {user_nick}</span>
+	</div>
 	<div class="container clearfix">

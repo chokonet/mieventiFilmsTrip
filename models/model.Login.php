@@ -75,6 +75,11 @@ class Login
 	   	endif;
     }
 
+    public static function logout_session(){
+        session_destroy();
+        $url = base_url();
+        header("Location: ".$url);
+    }
 
      // Evita que el objeto se pueda clonar
     public function __clone()

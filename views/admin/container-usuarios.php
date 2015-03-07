@@ -9,15 +9,45 @@
 		<form action="<?php echo base_url().'admin/usuarios'; ?>" method="post" name="ccatego" id="ccatego">
 			<label>Nombre del usuario</label>
 			<input type="text" name="usu_name" id="usu_name">
+			<label>Nick</label>
+			<input type="text" name="usu_nick" id="usu_nick">
+			<label>Email</label>
+			<input type="text" name="usu_email" id="usu_email">
+			<label>Contraseña</label>
+			<input type="text" name="usu_password" id="usu_password">
 			<input type="hidden" name="action" id="action" value="setSave">
 			<input type="submit" value="Crear usuario">
 		</form>
 	</div>
-	<div class="caja-crear-categoria clearfix shadow">
+	<div class="caja-crear-categoria segunda clearfix shadow">
 		<h4>Todos los usuarios</h4>
+		<div class="caja-usuarios">
+			<div class="nombre-usu">Nombre</div>
+			<div class="nick-usu">Nick</div>
+			<div class="email-usu">Email</div>
+			<div class="permisos-usu">Permisos</div>
+			<div class="count-usu">Eventos</div>
+		</div>
 		<?php if (!empty($info_vew['usuarios']) ) :
-			foreach ($info_vew['usuarios'] as $key => $usuarios) : ?>
+			foreach ($info_vew['usuarios'] as $key => $usuario) :?>
 
+				<div class="caja-usuarios">
+					<div class="nombre-usu"><?php echo $usuario->usu_nombre; ?></div>
+					<div class="nick-usu"><?php echo $usuario->usu_nick; ?></div>
+					<div class="email-usu"><?php echo $usuario->usu_email; ?></div>
+					<div class="permisos-usu"><?php echo $usuario->tipo; ?></div>
+					<div class="count-usu"><?php echo $usuario->count; ?></div>
+					<?php if ($usuario->usu_id != 1): ?>
+						<div class="hover-usu">
+							<a href="<?php echo base_url().'admin/usuarios/editar-usuario/'.$usuario->usu_id ?>">Editar Usuario</a>
+							<?php if ($usuario->usu_id != 1 AND $usuario->count == 0) : ?>
+								<a href="<?php echo base_url().'admin/usuarios/eliminar-usuario/'.$usuario->usu_id ?>">Eliminar Usuario</a>
+							<?php elseif ($usuario->usu_id != 1):?>
+								<p>Para eliminar no debe de tener eventos asignados.</p>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+				</div>
 			<?php endforeach;
 		endif; ?>
 	</div>
