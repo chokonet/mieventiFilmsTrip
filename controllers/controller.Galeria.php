@@ -20,8 +20,13 @@ class Galeria {
     	$array = array();
         if (isset($_GET['accion']) AND $_GET['accion'] == 'evento' AND isset($_GET['slug'])):
             $array['post'] = $this->_model->get_mEvento_slug($_GET['slug']);
+
             if (isset($array['post']->id_evento)) :
                 $array['fotos'] = $this->_model->get_fotos_evento($array['post']->id_evento);
+            elseif(empty($array['post'])):
+                $url = base_url().'admin/galeria/';
+                header("Location:".$url);
+                exit();
             endif;
         elseif($this->_permisos == 2):
             $array['posts'] = $this->_model->get_mEventos_user($this->_user_id);
