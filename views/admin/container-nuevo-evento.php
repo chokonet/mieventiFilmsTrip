@@ -51,3 +51,4 @@
 		</div>
 	</div>
 </div>
+<input type="hidden" id="trae_data_event" value="<?php echo base_url(); ?>">

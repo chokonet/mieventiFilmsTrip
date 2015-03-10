@@ -146,8 +146,8 @@ function get_class_name($admin){
 
 	$eve_dos = isset($_GET['accionA']) ? $_GET['accionA'] : false;
 	$class_name = ($admin == 'admin') ? 'Admin': $admin ;
-	$vew_name = ($admin == 'categorias') ? 'Categorias': $admin ;
-	$vew_name = ($admin == 'usuarios') ? 'Usuarios': $admin ;
+	$class_name = ($admin == 'categorias') ? 'Categorias': $class_name ;
+	$class_name = ($admin == 'usuarios') ? 'Usuarios': $class_name ;
 	$class_name = ($admin == 'eventos') ? 'Eventos': $class_name;
 	$class_name = ($admin == 'galeria') ? 'Galeria': $class_name;
 
@@ -158,6 +158,7 @@ function get_class_name($admin){
 
 	}
 	return $class_name;
+
 }
 
 /**

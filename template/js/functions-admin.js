@@ -3,6 +3,54 @@
 	"use strict";
 
 	$(function(){
+		window.data_nick = '';
+		window.data_event = '';
+		/**
+		* VALIDA FORMULARIO
+		**/
+		function validateEmail (email) {
+			var regExp = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			return regExp.test(email);
+		}
+		window.onload = function() {
+
+			if ( document.getElementById( "trae_data" )) {
+			     trae_data_compare();
+			}
+
+
+			if ( document.getElementById( "trae_data_event" )) {
+			     trae_data_event();
+			}
+		}
+
+
+		function trae_data_compare(){
+			var base_url = $('#trae_data').val();
+			$.ajax({
+			 	type: "POST",
+			 	url: base_url+"helpers/ajax.php",
+			 	data: {
+			 		action     :'data-compare-user'
+			 	}
+			}).done(function(result) {
+				window.data_nick = result;
+			});
+		}
+
+
+		function trae_data_event(){
+			var base_url = $('#trae_data_event').val();
+			$.ajax({
+			 	type: "POST",
+			 	url: base_url+"helpers/ajax.php",
+			 	data: {
+			 		action     :'data-compare-event'
+			 	}
+			}).done(function(result) {
+				window.data_event = result;
+			});
+		}
 
 		$(document).on('click','.caja-select', function (event) {
 			event.preventDefault();
@@ -29,29 +77,101 @@
 			$('.list-options').fadeOut();
 		});
 
+		// $('#cuser').on('submit', function (event) {
+		// 	event.preventDefault();
+		// 	var nombre = $('#usu_name').val();
+		// 	var nick = $('#usu_nick').val();
+		// 	var password = $('#usu_password').val();
+		// 	var email = $('#usu_password').val();
+
+		// 	var exist_nick = nick_exist(nick);
+
+		// 	if(exist_nick == 'existe'){
+		// 		$('.active_error_form').html('<b>ERROR:</b> El nick ya existe.').css({'display':'block'});
+		// 		$('#usu_nick').css({'background':'#FCE4E4'});
+		// 	}else if (nombre  == '' || nick  == ''  || password  == '') {
+		// 		$('#usu_name').css({'background':'#fff'});
+		// 		$('#usu_nick').css({'background':'#fff'});
+		// 		$('#usu_password').css({'background':'#fff'});
+
+		// 		if (nombre  == ''){
+		// 			$('#usu_name').css({'background':'#FCE4E4'});
+		// 		}else if(nick  == ''){
+		// 			$('#usu_nick').css({'background':'#FCE4E4'});
+		// 		}else if(password  == ''){
+		// 			$('#usu_password').css({'background':'#FCE4E4'});
+		// 		}
+
+		// 		$('.active_error_form').html('<b>ERROR:</b> Favor de llenar todos los campos.').css({'display':'block'});
+		// 	}else{
+		// 		document.cuser.submit();
+		// 	};
+		// });
+
+
 		$('#cuser').on('submit', function (event) {
 			event.preventDefault();
 			var nombre = $('#usu_name').val();
 			var nick = $('#usu_nick').val();
-			var name = $('#usu_email').val();
 			var password = $('#usu_password').val();
+			var email = $('#usu_password').val();
 
-			if (nombre  == '' || nick  == '' || name  == '' || password  == '') {
+			var exist_nick = nick_exist(nick);
+
+			if (nombre  == '' || nick  == ''  || password  == '') {
+				$('#usu_name').css({'background':'#fff'});
+				$('#usu_nick').css({'background':'#fff'});
+				$('#usu_password').css({'background':'#fff'});
+
 				if (nombre  == ''){
 					$('#usu_name').css({'background':'#FCE4E4'});
 				}else if(nick  == ''){
 					$('#usu_nick').css({'background':'#FCE4E4'});
-				}else if(name  == ''){
-					$('#usu_email').css({'background':'#FCE4E4'});
 				}else if(password  == ''){
 					$('#usu_password').css({'background':'#FCE4E4'});
 				}
 
-				$('.active_error_form').css({'display':'block'});
+				$('.active_error_form').html('<b>ERROR:</b> Favor de llenar todos los campos.').css({'display':'block'});
 			}else{
-				document.cevent.submit();
+				document.cuser.submit();
 			};
 		});
+
+		function nick_exist(nick){
+			var nicks = jQuery.parseJSON(window.data_nick);
+			var i;
+			for (i = 0; i < nicks.length; i++) {
+			    if(nicks[i] == nick){
+			    	return 'existe';
+			    }
+			}
+		}
+
+		function slug_exist(slug){
+			var slugs = jQuery.parseJSON(window.data_event);
+			var i;
+			for (i = 0; i < slugs.length; i++) {
+			    if(slugs[i] == slug){
+			    	return 'existe';
+			    }
+			}
+		}
+
+		// $('#cevent').on('submit', function (event) {
+		// 	event.preventDefault();
+		// 	var nombre = $('#event_name').val();
+		// 	var slug = get_slug(nombre);
+		// 	var exist = slug_exist(slug);
+		// 	if (nombre  == '') {
+		// 		$('#event_name').css({'background':'#FCE4E4'});
+		// 		$('.active_error_form').html('<b>ERROR:</b> Favor de llenar todos los campos.').css({'display':'block'});
+		// 	}else if(exist == 'existe'){
+		// 		$('#event_name').css({'background':'#FCE4E4'});
+		// 		$('.active_error_form').html('<b>ERROR:</b> El nombre '+nombre+' ya existe.').css({'display':'block'});
+		// 	}else{
+		// 		document.cevent.submit();
+		// 	};
+		// });
 
 
 		$('#cevent').on('submit', function (event) {
@@ -59,13 +179,42 @@
 			var nombre = $('#event_name').val();
 			if (nombre  == '') {
 				$('#event_name').css({'background':'#FCE4E4'});
-				$('.active_error_form').css({'display':'block'});
+				$('.active_error_form').html('<b>ERROR:</b> Favor de llenar todos los campos.').css({'display':'block'});
 			}else{
 				document.cevent.submit();
 			};
 		});
 
+		$('#ceventup').on('submit', function (event) {
+			event.preventDefault();
+			var nombre = $('#event_name').val();
+			if (nombre  == '') {
+				$('#event_name').css({'background':'#FCE4E4'});
+				$('.active_error_form').html('<b>ERROR:</b> Favor de llenar todos los campos.').css({'display':'block'});
+			}else{
+				document.ceventup.submit();
+			};
+		});
 
+
+
+		function get_slug(str){
+		  str = str.replace(/^\s+|\s+$/g, ''); // trim
+		  str = str.toLowerCase();
+
+		  // remove accents, swap ñ for n, etc
+		  var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
+		  var to   = "aaaaaeeeeeiiiiooooouuuunc------";
+		  for (var i=0, l=from.length ; i<l ; i++) {
+		    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+		  }
+
+		  str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+		    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+		    .replace(/-+/g, '-'); // collapse dashes
+
+		  return str;
+		};
 		/*
 
 		8888888888       888

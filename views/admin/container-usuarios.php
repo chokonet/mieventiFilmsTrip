@@ -18,7 +18,13 @@
 			<label>Email</label>
 			<input type="text" name="usu_email" id="usu_email">
 			<label class="segundos">Contraseña</label>
-			<input type="text" name="usu_password" id="usu_password" class="segundos">
+			<input type="password" name="usu_password" id="usu_password" class="segundos">
+			<label>Tipo de usuario</label>
+			<div class="caja-radio">
+				<input type="radio" name="tipo_us" value="1"> Admin
+				<input type="radio" name="tipo_us" value="2" checked> Cliente
+			</div>
+
 			<input type="hidden" name="action" id="action" value="setSave">
 			<input type="submit" value="Crear usuario">
 		</form>
@@ -55,5 +61,5 @@
 			<?php endforeach;
 		endif; ?>
 	</div>
-
+	<input type="hidden" id="trae_data" value="<?php echo base_url(); ?>">
 </div>

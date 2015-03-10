@@ -6,6 +6,11 @@ include(PATH_MIEVENTO.'/models/model.MiEvento.php');
 
 if(isset( $_POST['action']) AND $_POST['action'] == 'save_image_event') get_save_image_event($_POST);
 if(isset( $_POST['action']) AND $_POST['action'] == 'delete_img_event') elimina_imagen_evento($_POST);
+if(isset( $_POST['action']) AND $_POST['action'] == 'data-compare-user') get_data_user();
+if(isset( $_POST['action']) AND $_POST['action'] == 'data-compare-event') get_data_evento();
+
+
+
 
 function get_save_image_event($datos){
 	$nombre_img  = isset($datos['name_img']) ? $datos['name_img'] : '';
@@ -70,4 +75,40 @@ function delete_image_folder($id_imagen, $id_evento, $name_img){
 	@unlink($file_img3);
 
 	return true;
+}
+
+/**
+ * DATA COMPARE USER
+ */
+function get_data_user(){
+	$model = new mMiEvento();
+	$resp = $model->get_users_element('usu_nick');
+
+	$result = array();
+	foreach ($resp as $key => $value) {
+		$result[] = $value->usu_nick;
+	}
+
+	echo json_encode($result);
+	exit();
+}
+
+/**
+ * DATA COMPARE EVENTO
+ */
+function get_data_evento(){
+	$model = new mMiEvento();
+	$resp = $model->get_eventos_element('eve_slug');
+	file_put_contents(
+		'/Users/maquilador4/Desktop/php.txt',
+		var_export( $resp, true )
+	);
+
+	$result = array();
+	foreach ($resp as $key => $value) {
+		$result[] = $value->eve_slug;
+	}
+
+	echo json_encode($result);
+	exit();
 }

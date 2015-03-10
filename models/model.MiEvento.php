@@ -87,16 +87,12 @@ class mMiEvento {
 
             try {
 
-                $query = $this->dbh->prepare('UPDATE me_eventos SET eve_nombre = :nombre,
-                                                eve_slug = :slug,
-                                                eve_descripcion = :descripcion,
+                $query = $this->dbh->prepare('UPDATE me_eventos SET eve_descripcion = :descripcion,
                                                 id_categoria = :categoria,
                                                 id_usuario = :usuario,
                                                 estatus = :estatus
                                                 WHERE id_evento = :ideve');
 
-                $query->bindParam(':nombre', $nombre, PDO::PARAM_STR);
-                $query->bindParam(':slug', $slug, PDO::PARAM_STR);
                 $query->bindParam(':descripcion', $descrip, PDO::PARAM_STR);
                 // use PARAM_STR although a number
                 $query->bindParam(':categoria', $categoria, PDO::PARAM_INT);
@@ -232,7 +228,28 @@ class mMiEvento {
         }
     }
 
+    /**
+     * GUARDA UN USUARIO
+     */
+    public function set_save_user($usu_name, $usu_nick, $usu_email, $usu_password, $tipo_us){
+         try {
+                $query = $this->dbh->prepare('INSERT INTO me_usuarios (usu_nombre, usu_nick, usu_email, usu_contrasena, usu_permisos) VALUES (:nombre,:nick,:email,:contrasena,:permisos)');
 
+                $query->bindParam(":nombre", $usu_name, PDO::PARAM_STR);
+                $query->bindParam(":nick", $usu_nick, PDO::PARAM_STR);
+                $query->bindParam(":email", $usu_email, PDO::PARAM_STR);
+                $query->bindParam(":contrasena", $usu_password, PDO::PARAM_STR);
+                $query->bindParam(":permisos", $tipo_us, PDO::PARAM_INT);
+                $op = $query->execute();
+
+                return $op;
+
+            }catch(PDOException $e){
+                print "Error!: " . $e->getMessage();
+
+            }
+
+    }
     ///// CATEGORIAS ////////////////////////////////
 
 
@@ -282,6 +299,59 @@ class mMiEvento {
                 $result = $query->fetchAll(PDO::FETCH_OBJ);
 
                 return $result[0];
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
+
+    /**
+     * REGREA UN ELEMENTO DE LOS USUARIOS
+     */
+    public function get_users_element($elemento = 'id_usuario'){
+        try {
+
+            $sql = "SELECT $elemento FROM me_usuarios";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            $dbh = null;
+            if($query->rowCount() >= 1):
+                $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+                return $result;
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
+
+        }
+    }
+
+
+    /**
+     * REGREA UN ELEMENTO DE LOS EVENTOS
+     */
+    public function get_eventos_element($elemento = 'id_evento'){
+        try {
+
+            $sql = "SELECT $elemento FROM me_eventos";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            $dbh = null;
+            if($query->rowCount() >= 1):
+                $result = $query->fetchAll(PDO::FETCH_OBJ);
+
+                return $result;
             else:
                 return false;
             endif;
@@ -353,7 +423,7 @@ class mMiEvento {
 
     public function get_fotos_evento($id_evento){
         try {
-            $sql = "SELECT id_evento, title FROM me_uploads WHERE id_evento = $id_evento";
+            $sql = "SELECT id_upload, id_evento, title FROM me_uploads WHERE id_evento = $id_evento";
 
             $query = $this->dbh->prepare($sql);
             $query->execute();
@@ -388,6 +458,33 @@ class mMiEvento {
         }catch(PDOException $e){
             print "Error!: " . $e->getMessage();
 
+        }
+    }
+
+    /**
+     * REGRESA LA FOTO A DESACRGAR
+     */
+    public function get_foto($id_img, $id_usuario){
+        try {
+            $sql = "SELECT * FROM me_uploads AS up
+                INNER JOIN me_eventos AS eve
+                ON up.id_evento = eve.id_evento
+                WHERE up.id_upload = $id_img AND eve.id_usuario = $id_usuario";
+
+            $query = $this->dbh->prepare($sql);
+            $query->execute();
+
+            $dbh = null;
+            if($query->rowCount() >= 1):
+                 $result  = $query->fetchAll(PDO::FETCH_OBJ);
+
+                 return $result[0];
+            else:
+                return false;
+            endif;
+
+        }catch(PDOException $e){
+            print "Error!: " . $e->getMessage();
         }
     }
 

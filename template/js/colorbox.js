@@ -116,6 +116,7 @@
 	$loadingBay,
 	$loadingOverlay,
 	$derechos,
+	$download,
 	$title,
 	$current,
 	$slideshow,
@@ -124,6 +125,7 @@
 	$close,
 	$groupControls,
 	$events = $('<a/>'),
+	$id_upload = '',
 
 	// Variables for cached values or use across multiple functions
 	settings,
@@ -152,7 +154,6 @@
 	// Convenience function for creating new jQuery objects
 	function $tag(tag, id, css) {
 		var element = document.createElement(tag);
-
 		if (id) {
 			element.id = prefix + id;
 		}
@@ -425,6 +426,7 @@
 			$wrap = $tag(div, "Wrapper");
 			$content = $tag(div, "Content").append(
 				$derechos = $tag(div, "Derechos"),
+				$download = $tag(div, "Download"),
 				$title = $tag(div, "Title"),
 				$current = $tag(div, "Current"),
 				$prev = $('<button type="button"/>').attr({id:prefix+'Previous'}),
@@ -772,6 +774,7 @@
 
 			$title.html(settings.title).add($loaded).show();
 			$derechos.html(settings.derechos).text('fotos tomadas por filmstrip-club - Copyright © 2015');
+			$download.html(settings.download).attr('data-id_img', window.id_uplo).html('Descargar');
 
 			if (total > 1) { // handle grouping
 				if (typeof settings.current === "string") {
@@ -802,11 +805,13 @@
 							src = $(i).attr('href');
 						}
 
+
 						if (src && isImage(data, src)) {
 							src = retinaUrl(data, src);
 							img = document.createElement('img');
 							img.src = src;
 						}
+
 					});
 				}
 			} else {
@@ -947,6 +952,7 @@
 				}
 
 				photo.alt = $(element).attr('alt') || $(element).attr('data-alt') || '';
+				window.id_uplo = $(element).attr('data-id_upload');
 
 				if (settings.retinaImage && window.devicePixelRatio > 1) {
 					photo.height = photo.height / window.devicePixelRatio;

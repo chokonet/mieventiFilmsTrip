@@ -45,21 +45,28 @@ class Eventos {
     }
 
     public function set_save($data){
+
     	$nombre    = isset($data['event_name']) ? $data['event_name'] : '';
     	$slug      = isset($data['event_name']) ? get_slug($data['event_name']) : '';
     	$descrip   = isset($data['event_descripcion']) ? $data['event_descripcion'] : '';
     	$categoria = isset($data['event_categoria']) ? $data['event_categoria'] : 1;
     	$usuario   = isset($data['event_usuario']) ? $data['event_usuario'] : 1;
 
-    	$result = $this->_model->set_save_evento($nombre, $slug, $descrip, $categoria,$usuario );
+        if ($nombre != '') :
+        	$result = $this->_model->set_save_evento($nombre, $slug, $descrip, $categoria,$usuario );
 
-   		if ($result == TRUE) :
-            $id_event = $this->_model->get_id_ultimo_evento();
-            mkdir(PATH_MIEVENTO."/uploads/evento-".$id_event, 0700);
-   			$url = base_url().'admin/eventos/editar-evento/'.$id_event.'/';
-			header("Location:".$url);
-			exit();
-   		endif;
+       		if ($result == TRUE) :
+                $id_event = $this->_model->get_id_ultimo_evento();
+                mkdir(PATH_MIEVENTO."/uploads/evento-".$id_event, 0700);
+       			$url = base_url().'admin/eventos/editar-evento/'.$id_event.'/';
+    			header("Location:".$url);
+    			exit();
+       		endif;
+
+            $url = base_url().'admin/eventos/nuevo-evento/';
+            header("Location:".$url);
+            exit();
+        endif;
     }
 
     public function set_edit($data){

@@ -13,9 +13,9 @@
 		<b>ERROR:</b> El campo del nombre es obligatorio.
 	</div>
 	<div class="caja-crear-evento clearfix shadow">
-		<form action="" method="post" name="cevent" id="cevent">
+		<form action="" method="post" name="ceventup" id="ceventup">
 			<label>Nombre del Evento</label>
-			<input type="text" name="event_name" id="event_name" value="<?php echo $post->eve_nombre; ?>">
+			<input type="text" name="event_name" id="event_name" value="<?php echo $post->eve_nombre; ?>" disabled>
 			<label>Descripción</label>
 			<input type="text" name="event_descripcion" id="event_descripcion" value="<?php echo $post->eve_descripcion; ?>">
 			<label>Categoria</label>
@@ -87,78 +87,6 @@
 <?php else: ?>
 	<div class="ultimos-eventos container-eventos clearfix">
 		<h3>Eventos</h3>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Boda</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>XV Años</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Primera comunion</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event c-left">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Boda</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>XV Años</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Primera comunion</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Boda</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>XV Años</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Primera comunion</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event c-left">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Boda</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>XV Años</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
-		<div class="content-event">
-			<a href=""><img src="<?php echo base_url(); ?>uploads/img-p.png"></a>
-			<p><a href="">Nombre Evento</a></p>
-			<span>Primera comunion</span>
-			<span class="eliminar-evento">Eliminar</span>
-		</div>
 	</div>
 <?php endif; ?>
 

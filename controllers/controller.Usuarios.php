@@ -14,20 +14,23 @@ class Usuarios {
     	return $array;
     }
 
-  //   public function set_save($data){
+    public function set_save($data){
 
-  //   	$cat_name = isset($data['cat_name']) ? $data['cat_name'] : '';
-  //   	$cat_slug = isset($data['cat_name']) ? get_slug($data['cat_name']) : '';
+    	$usu_name = isset($data['usu_name']) ? $data['usu_name'] : '';
+    	$usu_nick = isset($data['usu_nick']) ? $data['usu_nick'] : '';
+      $usu_email = isset($data['usu_email']) ? $data['usu_email'] : '';
+      $usu_password = isset($data['usu_password']) ? encript_password($data['usu_password']) : '';
+      $tipo_us = isset($data['tipo_us']) ? $data['tipo_us'] : '';
 
-  //   	if ($cat_name != ''):
-  //   		$result = $this->_model->set_save_categoria($cat_name, $cat_slug);
-  //   	endif;
+    	if ($usu_name != '' || $usu_nick != '' || $usu_password != '' ):
+    		$result = $this->_model->set_save_user($usu_name, $usu_nick, $usu_email, $usu_password, $tipo_us);
+    	endif;
 
-		// $url = base_url().'admin/categorias/';
-		// header("Location:".$url);
-		// exit();
+    	$url = base_url().'admin/usuarios/';
+    	header("Location:".$url);
+    	exit();
 
-  //   }
+    }
 
   //   public function get_delete(){
   //   	if (isset($_GET['d']) AND $_GET['d'] != '' AND $_GET['d'] != 1) :

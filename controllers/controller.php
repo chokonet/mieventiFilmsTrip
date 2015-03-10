@@ -14,8 +14,7 @@ require(PATH_MIEVENTO."/helpers/functions.php");
 require(PATH_MIEVENTO."/models/model.MiEvento.php");
 require(PATH_MIEVENTO."/views/view.php");
 
-
-if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true && !isset($_POST['action']) ):
+if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true ):
 
 	$admin = isset($_GET['admin']) ? $_GET['admin'] : false;
 	$admin = isset($_GET['seccionA']) ? $_GET['seccionA'] : $admin;
@@ -24,10 +23,6 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true && !
 	$class_name = get_class_name($admin);
 
 	if ($class_name == false) redirect_login_permisos($_SESSION['user']->usu_permisos);
-
-
-	echo get_template_header('header-admin');
-
 
 	/* autocarga la clase */
 	function __autoload($nombre_clase) {
@@ -43,7 +38,11 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true && !
 
 		$getadmin = new $class_name();
 
-		if(method_exists($class_name, "getHtml_Template")):
+		if (isset($_POST['action']) && $_POST['action'] == 'setSave' && method_exists($class_name, "set_save")) :
+			$getadmin->set_save($_POST);
+		elseif (isset($_POST['action']) && $_POST['action'] == 'setEditEvent' && method_exists($class_name, "set_edit")) :
+			$getadmin->set_edit($_POST);
+		elseif(method_exists($class_name, "getHtml_Template")):
 			$info_vew = $getadmin->getHtml_Template();
 		endif;
 
@@ -51,6 +50,8 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true && !
 	    echo $e->getMessage(), "\n";
 	    // if ($e->getMessage() == false) redirect_login_permisos($_SESSION['user']->usu_permisos);
 	}
+
+	echo get_template_header('header-admin');
 
 	if (file_exists(PATH_MIEVENTO.'/views/admin/container-'.$vew_name.'.php')):
 		require(PATH_MIEVENTO.'/views/admin/container-'.$vew_name.'.php');
@@ -62,11 +63,6 @@ if (isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true && !
 
 	echo get_template_footer('admin');
 
-elseif(isset($_SESSION["authenticated"]) && $_SESSION["authenticated"] == true && isset($_POST['action']) ):
-
-	if (file_exists(PATH_MIEVENTO.'/controllers/controller-acciones.php')):
-		require(PATH_MIEVENTO.'/controllers/controller-acciones.php');
-	endif;
 else:
 	check_url_no_home();
 	echo get_template_login_header();

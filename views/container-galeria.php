@@ -3,6 +3,7 @@
 	foreach ($info_vew['posts'] as $key => $post):
 
 		$url_default = base_url().'uploads/img-p.png';
+
 		$img = ($post->freatured != '') ? url_foto($post->freatured, $post->id_evento, 'thumbnail') : $url_default; ?>
 		<div class="content-event">
 
